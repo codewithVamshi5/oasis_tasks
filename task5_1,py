@@ -1,0 +1,24 @@
+import socket
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(('localhost', 56789))
+server.listen(1)
+print("Server started... Waiting for a connection.")
+
+conn, addr = server.accept()
+print(f"Connected with {addr}")
+
+while True:
+    msg = conn.recv(1024).decode()
+    if msg.lower() == 'exit':
+        print("Client left the chat.")
+        break
+    print("Client:", msg)
+    
+    reply = input("You: ")
+    conn.send(reply.encode())
+    if reply.lower() == 'exit':
+        break
+
+conn.close()
+server.close()
